@@ -1,0 +1,31 @@
+#Construct Binary Tree from Inorder and Postorder Traversal
+public class Solution {
+    
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder.length != postorder.length) {
+            return null;
+        }
+        return helper(inorder, 0, inorder.length -1, postorder, 0, postorder.length -1);
+    }
+    
+    public int find(int[] inorder, int start, int end, int position) {
+        for(int i = start; i <= end; i ++) {
+            if(inorder[i] == position) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public TreeNode helper(int[] inorder, int instart, int inend, int[] postorder, int poststart, int postend) {
+        if(instart > inend) {
+            return null;
+        }
+        int position = find(inorder, instart, inend, postorder[postend]);
+        TreeNode root = new TreeNode(postorder[postend]);
+        
+        root.left = helper(inorder, instart, position -1, postorder, poststart, poststart + position - instart -1);
+        root.right = helper(inorder, position + 1, inend, postorder, poststart + position - instart, postend -1);
+        return root;
+    }
+}

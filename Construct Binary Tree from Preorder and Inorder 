@@ -1,0 +1,31 @@
+#Construct Binary Tree from Preorder and Inorder Traversal
+
+public class Solution {
+    
+    public TreeNode helper(int[] preorder, int prestart, int preend, int[] inorder, int instart, int inend) {
+        if(instart>inend) {
+            return null;
+        }
+        TreeNode root = new TreeNode(preorder[prestart]);
+        int position = find(inorder, instart, inend, preorder[prestart]);
+        root.left = helper(preorder, prestart + 1, prestart + position - instart, inorder, instart, position - 1);
+        root.right = helper(preorder, preend - inend + position + 1, preend, inorder, position + 1, inend);
+        return root;
+    }
+    
+    public int find(int[] inorder, int instart, int inend, int position) {
+        for(int i = instart; i <= inend; i ++) {
+            if(inorder[i] == position) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length != inorder.length) {
+            return null;
+        }
+        return helper(preorder, 0, preorder.length -1, inorder, 0, inorder.length -1);
+    }
+}
